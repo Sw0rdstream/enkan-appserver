@@ -1,0 +1,19 @@
+{
+  "name": "enkan-appserver",
+  "version": "1.0.0",
+  "description": "None",
+  "private": true,
+  "main": "start.js",
+  "scripts": {
+    "start": "node start.js"
+  },
+  "author": "Su Hang<su_h@worksap.co.jp>",
+  "license": "ISC",
+  "dependencies": {
+    "diskdb": "^0.1.14",
+    "fs-extra": "^0.30.0",
+    "ipa-metadata": "^1.4.0",
+    "node-apk-parser": "^0.2.3",
+    "restify": "^4.0.4"
+  }
+}
