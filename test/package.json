@@ -1,17 +1,20 @@
 {
-  "name": "test-tool-for-enkan",
-  "version": "0.1.1",
-  "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-exec": "~0.4.6",
-    "request": "~2.58",
-    "grunt-wait": "~0.1"
-  },
-  "main": "Gruntfile.js",
+  "name": "enkan-appserver",
+  "version": "1.0.0",
+  "description": "None",
+  "private": true,
+  "main": "start.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node start.js"
   },
-  "author": "",
+  "author": "Su Hang<su_h@worksap.co.jp>",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "diskdb": "^0.1.14",
+    "fs-extra": "^0.30.0",
+    "ipa-metadata": "^1.4.0",
+    "node-apk-parser": "^0.2.3",
+    "request": "^2.69.0",
+    "restify": "^4.0.4"
+  }
 }

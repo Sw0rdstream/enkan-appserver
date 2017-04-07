@@ -11,13 +11,13 @@ var Resources      = require('./resources.js');
 var apkParser = require('node-apk-parser');
 Resources.init();
 
-function writeAppRecord(bundleId, name, platform, uploadTime, version, build){
+function writeAppRecord(bundleId, name, platform, uploadTime, version, build, size){
   var records = Resources.db[platform].find({bundleId:bundleId});
   if(records.length){
-    Resources.db[platform].update({bundleId:bundleId}, {uploadTime:uploadTime, version:version, build:build, name:name});
+    Resources.db[platform].update({bundleId:bundleId}, {uploadTime:uploadTime, version:version, build:build, name:name, size:size});
   }
   else{
-    Resources.db[platform].save({bundleId:bundleId, uploadTime:uploadTime, version:version,build:build, name:name});
+    Resources.db[platform].save({bundleId:bundleId, uploadTime:uploadTime, version:version,build:build, name:name, size:size});
   }
   return {
     bundleId: bundleId,
@@ -25,7 +25,8 @@ function writeAppRecord(bundleId, name, platform, uploadTime, version, build){
     uploadTime: uploadTime,
     version: version,
     build:build,
-    name:name
+    name:name,
+    size:size
   }
 }
 
@@ -58,7 +59,7 @@ function respondAppUpload(req, res, next) {
               return next(err);
             }
             else{
-              writeAppRecord(metadata.CFBundleIdentifier, metadata.CFBundleName, 'ios', new Date().getTime(), metadata.CFBundleShortVersionString, metadata.CFBundleVersion);
+              writeAppRecord(metadata.CFBundleIdentifier, metadata.CFBundleName, 'ios', new Date().getTime(), metadata.CFBundleShortVersionString, metadata.CFBundleVersion, appFile.size);
               res.send({success:true});
               return next();
             }
@@ -76,7 +77,7 @@ function respondAppUpload(req, res, next) {
           return next(err);
         }
         else{
-          writeAppRecord(manifest.package, manifest.package/*fixme*/, 'android', new Date().getTime(), manifest.versionName, manifest.versionCode);
+          writeAppRecord(manifest.package, manifest.package/*fixme*/, 'android', new Date().getTime(), manifest.versionName, manifest.versionCode, appFile.size);
           res.send({success:true});
           return next();
         }
@@ -192,6 +193,11 @@ function respondIpaDownload(req, res, next){
   next();
 }
 
+function respondHello(req, res, next){
+  res.send()
+  next();
+}
+
 
 var server = restify.createServer();
 server.use(restify.bodyParser());
@@ -200,6 +206,7 @@ server.post('/api/apps/upload', respondAppUpload);
 server.del('/api/apps/:appId/:platform', respondAppRemove);
 server.get('/api/apps/:appId/:platform', respondAppDownload); //for ios, only provide plist
 server.get('/api/ipa/:appId', respondIpaDownload);
+server.get('/api/hello', respondHello);
 server.get(/front\//, respondStaticResources);
 server.get('/front', function(req, res, next){
   res.redirect('/front/index.html', next);
